@@ -47,6 +47,9 @@ class WikiMarkdown {
 		}
 		$out = $result->getValue();
 
+		// Make it so that tables have borders
+		$out = str_replace('<table>', '<table class="wikitable">', $out);
+		
 		// If SyntaxHighlight is loaded, then use it to perform syntax highlighting
 		if ( ExtensionRegistry::getInstance()->isLoaded( 'SyntaxHighlight' ) ) {
 			$out = preg_replace_callback(
