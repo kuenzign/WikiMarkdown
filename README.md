@@ -51,5 +51,5 @@ _This is italic text_
 
 # Credits
 
-* This extension was inspired by the [Mardown Content Handler](https://github.com/brightbyte/MWExtension-Markdown) by Daniel Kinzler and the [Mardown Extension](https://www.mediawiki.org/wiki/Extension:Markdown) by Blake Harley.
+* This extension was inspired by the [Markdown Content Handler](https://github.com/brightbyte/MWExtension-Markdown) by Daniel Kinzler and the [Markdown Extension](https://www.mediawiki.org/wiki/Extension:Markdown) by Blake Harley.
 * Parts of this code are based on the [SyntaxHighlight](https://www.mediawiki.org/wiki/Extension:SyntaxHighlight) and [Scribunto](https://www.mediawiki.org/wiki/Extension:Scribunto) extensions.
