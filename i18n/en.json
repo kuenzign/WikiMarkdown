@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Nathan Kuenzig"
+		]
+	},
+	"wikimarkdown-desc": "Provides Markdown syntax <code>&lt;markdown&gt;</code> using [https://parsedown.org/ Parsedown - PHP Markdown Parser]",
+	"markdown-error-category": "Pages with markdown errors",
+	"markdown-error-category-desc": "There was an error when attempting to parse markdown included on the page.",
+	"markdown-visualeditor-mwmarkdowninspector-code": "Code",
+	"markdown-visualeditor-mwmarkdowninspector-title": "Markdown",
+	"markdown-error-parse-failure": "Failed to parse markdown"
+}

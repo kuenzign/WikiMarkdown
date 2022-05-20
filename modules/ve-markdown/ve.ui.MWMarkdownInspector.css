@@ -1,0 +1,11 @@
+/*!
+ * VisualEditor UserInterface MWMarkdownInspector styles.
+ */
+
+.ve-ui-mwMarkdownInspector-content .ve-ui-mwExtensionWindow-input textarea {
+	font-family: monospace, monospace;
+}
+
+.ve-ui-mwMarkdownInspector-content .oo-ui-numberInputWidget {
+	width: 10em;
+}

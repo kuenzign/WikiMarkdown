@@ -1,0 +1,16 @@
+/*!
+ * VisualEditor UserInterface MWMarkdownDialog styles.
+ */
+
+.ve-ui-mwMarkdownDialog-content .ve-ui-mwExtensionWindow-input {
+	max-width: none;
+}
+
+.ve-ui-mwMarkdownDialog-content .ve-ui-mwExtensionWindow-input textarea {
+	font-family: monospace, monospace;
+}
+
+.ve-ui-mwMarkdownDialog-content .ve-ui-mwMarkdownWindow-languageField,
+.ve-ui-mwMarkdownDialog-content .ve-ui-mwMarkdownWindow-startLineField {
+	max-width: 30em;
+}
