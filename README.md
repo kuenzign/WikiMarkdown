@@ -14,7 +14,19 @@ Add this line to your LocalSettings.php:
 wfLoadExtension( 'WikiMarkdown' );
 ```
 
-This extension requires [Parsedown](https://github.com/erusev/parsedown) to be installed and optionally [Parsedown Extra](https://github.com/erusev/parsedown-extra).
+This extension requires [Parsedown](https://github.com/erusev/parsedown) to be installed and optionally [Parsedown Extra](https://github.com/erusev/parsedown-extra).  Either install them manually, or use Composer by adding the line `"extensions/WikiMarkdown/composer.json"` to the "composer.local.json" file in the root directory of your wiki, e.g.
+```json
+{
+	"extra": {
+		"merge-plugin": {
+			"include": [
+				"extensions/WikiMarkdown/composer.json"
+			]
+		}
+	}
+}
+```
+Then run `composer update` in the root directory of your wiki.
 
 # Usage
 
