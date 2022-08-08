@@ -67,6 +67,44 @@ class WikiMarkdown {
 			);
 		}
 
+		// If Parsedown Extended is available with math turned on and the Math extension is loaded, then use it to perform math formatting
+		if ( $wgAllowMarkdownExtended && (false !== self::getParsedown()->options['math'] ?? false) && ExtensionRegistry::getInstance()->isLoaded( 'Math' ) ) {
+			$out = preg_replace_callback(
+				'/(?<!\\\\)\\\\\[(.*)(?<!\\\\)\\\\\]/isU',
+				function ( $matches ) use ( &$parser ) {
+					$args = array('display' => 'block');
+					return MediaWiki\Extension\Math\Hooks::mathTagHook( html_entity_decode( $matches[1] ), $args, $parser );
+				},
+				$out
+			);
+			$out = preg_replace_callback(
+				'/(?<!\\\\)\$\$(.*)(?<!\\\\)\$\$/isU',
+				function ( $matches ) use ( &$parser ) {
+					$args = array('display' => 'block');
+					return MediaWiki\Extension\Math\Hooks::mathTagHook( html_entity_decode( $matches[1] ), $args, $parser );
+				},
+				$out
+			);
+			$out = preg_replace_callback(
+				'/(?<!\\\\)\\\\\((.*)(?<!\\\\)\\\\\)/isU',
+				function ( $matches ) use ( &$parser ) {
+					$args = array('display' => 'inline');
+					return MediaWiki\Extension\Math\Hooks::mathTagHook( html_entity_decode( $matches[1] ), $args, $parser );
+				},
+				$out
+			);
+			if ( self::getParsedown()->options['math']['single_dollar'] ?? false ) {
+				$out = preg_replace_callback(
+					'/(?<!\\\\)\$(.*)(?<!\\\\)\$/isU',
+					function ( $matches ) use ( &$parser ) {
+						$args = array('display' => 'inline');
+						return MediaWiki\Extension\Math\Hooks::mathTagHook( html_entity_decode( $matches[1] ), $args, $parser );
+					},
+					$out
+				);
+			}
+		}
+		
 		// Allow certain HTML attributes
 		$htmlAttribs = Sanitizer::validateAttributes(
 			$args, array_flip( [ 'style', 'class', 'id', 'dir' ] )
@@ -223,14 +261,19 @@ class WikiMarkdown {
 	/**
 	 * @return Parsedown
 	 */
-	protected static function getParsedown() {
+	protected static function getParsedown()
+	{
 		static $parsedown;
-		global $wgMarkdownExtra;
+		global $wgAllowMarkdownExtra;
+		global $wgAllowMarkdownExtended;
+		global $wgParsedownExtendedParameters;
 
-		if ( !$parsedown ) {
-			$parsedown = $wgMarkdownExtra
-				? new ParsedownExtra()
-				: new Parsedown();
+		if (!$parsedown) {
+			$parsedown = $wgAllowMarkdownExtended
+				? new \ParsedownExtended($wgParsedownExtendedParameters)
+				: ($wgAllowMarkdownExtra
+					? new \ParsedownExtra()
+					: new \Parsedown());
 		}
 
 		return $parsedown;
