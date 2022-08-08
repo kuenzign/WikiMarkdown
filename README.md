@@ -14,7 +14,7 @@ Add this line to your LocalSettings.php:
 wfLoadExtension( 'WikiMarkdown' );
 ```
 
-This extension requires [Parsedown](https://github.com/erusev/parsedown) to be installed and optionally [Parsedown Extra](https://github.com/erusev/parsedown-extra).  Either install them manually, or use Composer by adding the line `"extensions/WikiMarkdown/composer.json"` to the "composer.local.json" file in the root directory of your wiki, e.g.
+This extension requires [Parsedown](https://github.com/erusev/parsedown) to be installed and optionally [Parsedown Extra](https://github.com/erusev/parsedown-extra) and [Parsedown Extended](https://github.com/BenjaminHoegh/ParsedownExtended).  Either install them manually, or use Composer by adding the line `"extensions/WikiMarkdown/composer.json"` to the "composer.local.json" file in the root directory of your wiki, e.g.
 ```json
 {
 	"extra": {
@@ -54,11 +54,14 @@ _This is italic text_
 
 # Configuration
 
-* `$wgAllowMarkdownExtra` (optional): Set to `true` in order to specify that Parsedown Extra should be used.
+* `$wgAllowMarkdownExtra` (optional): Set to `true` in order to specify that [Parsedown Extra](https://github.com/erusev/parsedown-extra) should be used.
+* `$wgAllowMarkdownExtended` (optional): Set to `true` in order to specify that [Parsedown Extended](https://github.com/BenjaminHoegh/ParsedownExtended) should be used.
+* `$wgParsedownExtendedParameters` (optional): Allows for specifying the options that are passed to Parsedown Extended.  See the [documentation](https://benjaminhoegh.github.io/ParsedownExtended/) for which options you want to enable or disable.
 
 # Other Features
 * This extension also functions as a content handler for wiki pages ending in `.md`.  For these pages, the entire page will be interpreted as markdown and markdown syntax highlighting will be used in the editor if you have the [CodeEditor](https://www.mediawiki.org/wiki/Extension:CodeEditor) extension installed.
 * When specifying code blocks in markdown, this extension will automatically apply the [SyntaxHighlight](https://www.mediawiki.org/wiki/Extension:SyntaxHighlight) extension if it is installed.  All languages supported by the SyntaxHighlight extension will work.
+* When using Parsedown Extended, this extension will automatically apply the [Math](https://www.mediawiki.org/wiki/Extension:Math) extension if it is installed to any math blocks by default.  This can be turned off by either not using Parsedown Extended, or modifying `$wgParsedownExtendedParameters`.  The following syntaxes are valid: `\[ ... \]`/`$$ ... $$` (for block mode) and `\( ... \)`/`$ ... $` (for inline mode)
 * When using the [VisualEditor](https://www.mediawiki.org/wiki/Extension:VisualEditor) extension with the CodeEditor extension, markdown blocks will be editable using a markdown editor.
 
 # Credits
