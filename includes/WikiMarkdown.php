@@ -68,6 +68,26 @@ class WikiMarkdown {
 			$out
 		);
 		
+		// Make html headings into wiki headlines
+		$refers = [];
+		$out = preg_replace_callback(
+			'/<h([1-6])(\s+id="(.*)")?>(.*)<\/h\1>/isU',
+			function ($matches) use (&$refers) {
+				// Create an anchor id from the heading text or id (if found)
+				$anchor = 'markdown_' . (empty($matches[2]) ? Sanitizer::escapeIdForAttribute($matches[4]) : html_entity_decode($matches[3]));
+				// Ensure that anchors are unique
+				if ( isset( $refers[$anchor] ) ) {
+					for ( $i = 2; isset( $refers["${anchor}_$i"] ); ++$i );
+					$anchor .= "_$i";
+					$refers["${anchor}_$i"] = true;
+				} else {
+					$refers[$anchor] = true;
+				}
+				return Linker::makeHeadline($matches[1], '>', $anchor, $matches[4], '');
+			},
+			$out
+		);
+		
 		// If SyntaxHighlight is loaded, then use it to perform syntax highlighting
 		if ( ExtensionRegistry::getInstance()->isLoaded( 'SyntaxHighlight' ) ) {
 			$out = preg_replace_callback(
