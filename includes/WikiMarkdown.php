@@ -13,7 +13,7 @@ class WikiMarkdown {
 	 */
 	public static function onRegistration() {
 		define( 'CONTENT_MODEL_MARKDOWN', 'markdown' );
-		define( 'CONTENT_FORMAT_MARKDOWN', 'text/Markdown' );
+		define( 'CONTENT_FORMAT_MARKDOWN', 'text/markdown' );
 	}
 
 	/**
@@ -35,6 +35,8 @@ class WikiMarkdown {
 	 * @throws MWException
 	 */
 	public static function parserHook( $text, $args, $parser ) {
+		global $wgAllowMarkdownExtended;
+		
 		// Replace strip markers (For e.g. {{#tag:markdown|<nowiki>...}})
 		$out = $parser->getStripState()->unstripNoWiki( $text );
 
@@ -49,6 +51,22 @@ class WikiMarkdown {
 
 		// Make it so that tables have borders
 		$out = str_replace('<table>', '<table class="wikitable">', $out);
+		
+		// Format links
+		$out = preg_replace_callback(
+			'/<a\s+href="(.*)">(.*)<\/a>/isU',
+			function ($matches) use (&$parser) {
+				$url = html_entity_decode($matches[1]);
+				$text = html_entity_decode($matches[2]);
+				$linkType = $url == $text ? 'free' : 'text';
+				$cleanUrl = Sanitizer::cleanUrl($url);
+				// Register link in the output object
+				$parser->getOutput()->addExternalLink($url);
+				// Create an external link
+				return Linker::makeExternalLink($cleanUrl, $text, true, $linkType, $parser->getExternalLinkAttribs($url), $parser->getTitle());
+			},
+			$out
+		);
 		
 		// If SyntaxHighlight is loaded, then use it to perform syntax highlighting
 		if ( ExtensionRegistry::getInstance()->isLoaded( 'SyntaxHighlight' ) ) {
