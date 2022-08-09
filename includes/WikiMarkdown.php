@@ -105,8 +105,8 @@ class WikiMarkdown {
 			);
 		}
 
-		// If Parsedown Extended is available with task turned on, then convert them to OOUI checkboxes
-		if ( $wgAllowMarkdownExtended && (false !== self::getParsedown()->options['task'] ?? false) ) {
+		// If Parsedown Extended is available with tasks turned on, then convert them to OOUI checkboxes
+		if ( $wgAllowMarkdownExtended && ( false !== self::getParsedown()->options['lists']['tasks'] ?? true ) ) {
 			$parser->enableOOUI();
 			$out = preg_replace_callback(
 				'/<input\s+type="checkbox"(.*)>/isU',
@@ -120,9 +120,9 @@ class WikiMarkdown {
 				$out
 			);
 		}
-		
+
 		// If Parsedown Extended is available with math turned on and the Math extension is loaded, then use it to perform math formatting
-		if ( $wgAllowMarkdownExtended && (false !== self::getParsedown()->options['math'] ?? false) && ExtensionRegistry::getInstance()->isLoaded( 'Math' ) ) {
+		if ( $wgAllowMarkdownExtended && ( false !== self::getParsedown()->options['math'] ?? false ) && ExtensionRegistry::getInstance()->isLoaded( 'Math' ) ) {
 			$out = preg_replace_callback(
 				'/(?<!\\\\)\\\\\[(.*)(?<!\\\\)\\\\\]/isU',
 				function ( $matches ) use ( &$parser ) {
