@@ -42,19 +42,10 @@
 	"callback": "WikiMarkdown::onRegistration",
 	"config": {
 		"AllowMarkdownExtra": {
-			"value": false
+			"value": true
 		},
 		"AllowMarkdownExtended": {
-			"value": false
-		},
-		"ParsedownExtendedParameters": {
-			"value": {
-				"math": {
-					"single_dollar": true
-				},
-				"sup": true,
-				"sub": true
-			}
+			"value": true
 		}
 	},
 	"ContentHandlers": {

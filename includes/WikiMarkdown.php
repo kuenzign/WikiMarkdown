@@ -1,5 +1,14 @@
 <?php
 
+use MediaWiki\Parser\Sanitizer;
+use MediaWiki\Linker\Linker;
+use MediaWiki\Title\Title;
+use MediaWiki\SyntaxHighlight\SyntaxHighlight;
+use MediaWiki\Status\Status;
+use MediaWiki\Html\Html;
+use MediaWiki\Output\OutputPage;
+use MediaWiki\MediaWikiServices;
+
 class WikiMarkdown {
 
 	/** @var string CSS class for markdown code. */
@@ -106,57 +115,54 @@ class WikiMarkdown {
 		}
 
 		// If Parsedown Extended is available with tasks turned on, then convert them to OOUI checkboxes
-		if ( $wgAllowMarkdownExtended && ( false !== self::getParsedown()->options['lists']['tasks'] ?? true ) ) {
-			$parser->enableOOUI();
+		// self::getParsedown()->
+		if ( $wgAllowMarkdownExtended && ( false !== self::getParsedown()->isEnabled('lists.tasks') ?? true ) ) {
+			OutputPage::setupOOUI();
+			$parser->getOutput()->setEnableOOUI(true);
 			$out = preg_replace_callback(
-				'/<input\s+type="checkbox"(.*)>/isU',
+				'/<input\s+type="checkbox"(.*)\/>/isU',
 				function ( $matches ) {
 					$check = new \OOUI\CheckboxInputWidget([
-						'disabled' => true,
-						'selected' => in_array('checked', explode(' ', $matches[1]), true)
+						// ref: ParsedownExtended::li
+						'selected' => in_array('checked="checked"', explode(' ', $matches[1]), true)
 					]);
-					return $check->toString();
+					return $check->toString(). ' ';
+					//  . (new MathSource( html_entity_decode( $matches[1] ) ))->getHtmlOutput() . ' ';
 				},
 				$out
 			);
 		}
 
 		// If Parsedown Extended is available with math turned on and the Math extension is loaded, then use it to perform math formatting
-		if ( $wgAllowMarkdownExtended && ( false !== self::getParsedown()->options['math'] ?? false ) && ExtensionRegistry::getInstance()->isLoaded( 'Math' ) ) {
+		$local_fn = function ( $matches ) {
+			// ref: JsonToMathML::fetchMathML (advice), MathMathML::getHtmlOutput (implemtation matches result class)
+			$renderer = MediaWikiServices::getInstance()->get( 'Math.RendererFactory' )
+			->getRenderer( html_entity_decode( $matches[1] ),
+			[ "type" => 'tex' ], 'latexml' );
+			$renderer->render();
+			return $renderer->getHtmlOutput();
+		};
+		if ( $wgAllowMarkdownExtended && ExtensionRegistry::getInstance()->isLoaded( 'Math' ) ) {
 			$out = preg_replace_callback(
 				'/(?<!\\\\)\\\\\[(.*)(?<!\\\\)\\\\\]/isU',
-				function ( $matches ) use ( &$parser ) {
-					$args = array('display' => 'block');
-					return MediaWiki\Extension\Math\Hooks::mathTagHook( html_entity_decode( $matches[1] ), $args, $parser );
-				},
+				$local_fn,
 				$out
 			);
 			$out = preg_replace_callback(
 				'/(?<!\\\\)\$\$(.*)(?<!\\\\)\$\$/isU',
-				function ( $matches ) use ( &$parser ) {
-					$args = array('display' => 'block');
-					return MediaWiki\Extension\Math\Hooks::mathTagHook( html_entity_decode( $matches[1] ), $args, $parser );
-				},
+				$local_fn,
 				$out
 			);
 			$out = preg_replace_callback(
 				'/(?<!\\\\)\\\\\((.*)(?<!\\\\)\\\\\)/isU',
-				function ( $matches ) use ( &$parser ) {
-					$args = array('display' => 'inline');
-					return MediaWiki\Extension\Math\Hooks::mathTagHook( html_entity_decode( $matches[1] ), $args, $parser );
-				},
+				$local_fn,
 				$out
 			);
-			if ( self::getParsedown()->options['math']['single_dollar'] ?? false ) {
-				$out = preg_replace_callback(
-					'/(?<!\\\\)\$(.*)(?<!\\\\)\$/isU',
-					function ( $matches ) use ( &$parser ) {
-						$args = array('display' => 'inline');
-						return MediaWiki\Extension\Math\Hooks::mathTagHook( html_entity_decode( $matches[1] ), $args, $parser );
-					},
-					$out
-				);
-			}
+			$out = preg_replace_callback(
+				'/(?<!\\\\)\$(.*)(?<!\\\\)\$/isU',
+				$local_fn,
+				$out
+			);
 		}
 		
 		// Allow certain HTML attributes
@@ -313,7 +319,7 @@ class WikiMarkdown {
 	}
 
 	/**
-	 * @return Parsedown
+	 * @return ParsedownExtended
 	 */
 	protected static function getParsedown()
 	{
@@ -324,7 +330,7 @@ class WikiMarkdown {
 
 		if (!$parsedown) {
 			$parsedown = $wgAllowMarkdownExtended
-				? new \ParsedownExtended($wgParsedownExtendedParameters)
+				? new \ParsedownExtended()
 				: ($wgAllowMarkdownExtra
 					? new \ParsedownExtra()
 					: new \Parsedown());
