@@ -54,9 +54,9 @@ _This is italic text_
 
 # Configuration
 
-* `$wgAllowMarkdownExtra` (optional): Set to `true` in order to specify that [Parsedown Extra](https://github.com/erusev/parsedown-extra) should be used.
-* `$wgAllowMarkdownExtended` (optional): Set to `true` in order to specify that [Parsedown Extended](https://github.com/BenjaminHoegh/ParsedownExtended) should be used.
-* `$wgParsedownExtendedParameters` (optional): Allows for specifying the options that are passed to Parsedown Extended.  See the [documentation](https://benjaminhoegh.github.io/ParsedownExtended/) for which options you want to enable or disable.
+* `$wgAllowMarkdownExtra` (optional): Set to `true` in order to specify that [Parsedown Extra](https://github.com/erusev/parsedown-extra) should be used. (default: `true`)
+* `$wgAllowMarkdownExtended` (optional): Set to `true` in order to specify that [Parsedown Extended](https://github.com/BenjaminHoegh/ParsedownExtended) should be used. (default: `true`)
+* ~~`$wgParsedownExtendedParameters` (optional): Allows for specifying the options that are passed to Parsedown Extended.  See the [documentation](https://benjaminhoegh.github.io/ParsedownExtended/) for which options you want to enable or disable.~~ For compatibility to Parsedown and ParseExtra, this branch remove this option and default to [that of ParsedownExtended](https://github.com/BenjaminHoegh/ParsedownExtended/blob/main/src/ParsedownExtended.php#L36).
 
 # Other Features
 * This extension also functions as a content handler for wiki pages ending in `.md`.  For these pages, the entire page will be interpreted as markdown and markdown syntax highlighting will be used in the editor if you have the [CodeEditor](https://www.mediawiki.org/wiki/Extension:CodeEditor) extension installed.
