@@ -4,7 +4,7 @@
 	"require": {
 		"erusev/parsedown": "^1.8.0-beta-7",
 		"erusev/parsedown-extra": "^0.8.1",
-		"benjaminhoegh/parsedown-extended": "^1.1.2"
+		"benjaminhoegh/parsedown-extended": "1.1.2"
 	},
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "31.0.0",
