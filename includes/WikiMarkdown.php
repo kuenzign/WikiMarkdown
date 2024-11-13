@@ -77,9 +77,9 @@ class WikiMarkdown {
 				$anchor = 'markdown_' . (empty($matches[2]) ? Sanitizer::escapeIdForAttribute($matches[4]) : html_entity_decode($matches[3]));
 				// Ensure that anchors are unique
 				if ( isset( $refers[$anchor] ) ) {
-					for ( $i = 2; isset( $refers["${anchor}_$i"] ); ++$i );
+					for ( $i = 2; isset( $refers["{$anchor}_$i"] ); ++$i );
 					$anchor .= "_$i";
-					$refers["${anchor}_$i"] = true;
+					$refers["{$anchor}_$i"] = true;
 				} else {
 					$refers[$anchor] = true;
 				}
