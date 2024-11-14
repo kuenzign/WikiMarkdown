@@ -4,9 +4,18 @@ This is a [MediaWiki](https://www.mediawiki.org/) extension that allows for mark
 
 # Requirements
 
-This version of the extension has been tested with Parsedown 1.7.4, Parsedown Extra 0.8.1, and MediaWiki 1.35.
+This version of the extension has been tested with Parsedown 1.7.4, Parsedown Extra 0.8.1, and MediaWiki 1.35. These libraries come with `Composer 2.0+`. To check if your composer version with `composer -v`
+
+If it isn't installed, consider [this guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-composer-on-ubuntu-20-04).
 
 # Installation
+
+Download and unpack this extension into extensions folder.
+
+```bash
+cd /var/www/mediawiki/extensions
+git clone https://github.com/kuenzign/WikiMarkdown.git
+```
 
 Add this line to your LocalSettings.php:
 
@@ -68,3 +77,7 @@ _This is italic text_
 
 * This extension was inspired by the [Markdown Content Handler](https://github.com/brightbyte/MWExtension-Markdown) by Daniel Kinzler and the [Markdown Extension](https://www.mediawiki.org/wiki/Extension:Markdown) by Blake Harley.
 * Parts of this code are based on the [SyntaxHighlight](https://www.mediawiki.org/wiki/Extension:SyntaxHighlight) and [Scribunto](https://www.mediawiki.org/wiki/Extension:Scribunto) extensions.
+
+# Demo
+
+[AI art wiki](https://ai-art-wiki.com/wiki/User:Idiot/wikimarkdown) uses this extension.
